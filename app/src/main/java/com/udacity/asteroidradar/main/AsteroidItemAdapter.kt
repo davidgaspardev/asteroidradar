@@ -23,8 +23,7 @@ class AsteroidItemAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(asteroid: Asteroid) {
-            binding.asteroidItemCodename.text = asteroid.codename
-            binding.asteroidItemCloseApproachDate.text = asteroid.closeApproachDate
+            binding.asteroid = asteroid
         }
 
         companion object {
