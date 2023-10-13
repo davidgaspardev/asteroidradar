@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +26,9 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.asteroidRecycler.layoutManager = LinearLayoutManager(context)
-        binding.asteroidRecycler.adapter = AsteroidItemAdapter(asteroids)
+        binding.asteroidRecycler.adapter = AsteroidItemAdapter(asteroids, AsteroidItemListener { id ->
+            Toast.makeText(context, asteroids.find { asteroid -> asteroid.id == id }!!.codename, Toast.LENGTH_SHORT).show()
+        })
 
         setHasOptionsMenu(true)
 
