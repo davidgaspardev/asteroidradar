@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.Asteroid" />
@@ -23,28 +24,39 @@
             android:id="@+id/asteroid_item_codename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:text="@{asteroid.codename}"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/asteroid_item_close_approach_date"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="(2018 BF5)"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="(2018 BF5)" />
 
         <TextView
             android:id="@+id/asteroid_item_close_approach_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
             android:layout_marginStart="16dp"
             android:alpha="0.75"
             android:text="@{asteroid.closeApproachDate}"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/asteroid_item_codename"
             tools:text="2020-02-08" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@{asteroid.potentiallyHazardous ? @drawable/ic_status_potentially_hazardous : @drawable/ic_status_normal}"
+            android:contentDescription="@string/status_icon_of_asteroid"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_status_normal"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

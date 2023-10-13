@@ -25,11 +25,11 @@ val asteroids = arrayOf(
     Asteroid(7, "Asteroid7", "2023-10-07", 17.5, 3.8, 15.5, 1.4e6, false),
     Asteroid(8, "Asteroid8", "2023-10-08", 24.4, 6.2, 22.5, 3.5e6, true),
     Asteroid(9, "Asteroid9", "2023-10-09", 23.1, 2.6, 21.5, 1.7e6, false),
-    Asteroid(10, "Asteroid10", "2023-10-10", 19.9, 4.1, 17.5, 2.1e6, true),
+    Asteroid(10, "Asteroid10", "2023-10-10", 19.9, 4.1, 17.5, 2.1e6, false),
     Asteroid(11, "Asteroid11", "2023-10-11", 22.7, 3.6, 24.5, 1.6e6, false),
     Asteroid(12, "Asteroid12", "2023-10-12", 21.6, 3.9, 19.5, 1.5e6, true),
     Asteroid(13, "Asteroid13", "2023-10-13", 20.5, 2.7, 20.5, 3.3e6, false),
     Asteroid(14, "Asteroid14", "2023-10-14", 18.7, 3.4, 16.5, 2.4e6, true),
-    Asteroid(15, "Asteroid15", "2023-10-15", 19.8, 5.6, 23.5, 1.3e6, false),
+    Asteroid(15, "Asteroid15", "2023-10-15", 19.8, 5.6, 23.5, 1.3e6, true),
     Asteroid(16, "Asteroid16", "2023-10-16", 24.2, 4.5, 18.5, 3.1e6, true)
 )
