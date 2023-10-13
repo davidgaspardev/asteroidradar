@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.asteroids
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -22,6 +24,8 @@ class MainFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+        binding.asteroidRecycler.layoutManager = LinearLayoutManager(context)
+        binding.asteroidRecycler.adapter = AsteroidItemAdapter(asteroids)
 
         setHasOptionsMenu(true)
 
