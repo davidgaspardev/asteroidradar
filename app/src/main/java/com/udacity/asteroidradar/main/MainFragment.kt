@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.picasso.Picasso
+import com.udacity.asteroidradar.AsteroidFilter
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
+    private val LOG_TAG = "MainFragment"
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
@@ -68,6 +70,12 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(LOG_TAG, "onOptionsItemSelected: ${item.itemId}")
+        when (item.itemId) {
+            R.id.show_all_menu -> viewModel.updateFilter(AsteroidFilter.SHOW_WEEK)
+            R.id.show_rent_menu -> viewModel.updateFilter(AsteroidFilter.SHOW_TODAY)
+            R.id.show_buy_menu -> viewModel.updateFilter(AsteroidFilter.SHOW_SAVED)
+        }
         return true
     }
 }

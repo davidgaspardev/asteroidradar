@@ -47,4 +47,16 @@ object AsteroidRepository {
 
         return@withContext asteroidDao.getByDateRange(startDate, endDate).asDomainModel()
     }
+
+    suspend fun getToday(context: Context): List<Asteroid> = withContext(Dispatchers.IO) {
+        val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+        val today = dateFormat.format(Calendar.getInstance().time)
+
+        return@withContext getByDateRange(context, today, today)
+    }
+
+    suspend fun getAll(context: Context): List<Asteroid> = withContext(Dispatchers.IO) {
+        val asteroidDao = AsteroidDatabase.getInstance(context).asteroidDao()
+        return@withContext asteroidDao.getAll().asDomainModel()
+    }
 }
