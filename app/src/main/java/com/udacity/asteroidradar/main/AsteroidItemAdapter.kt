@@ -3,7 +3,7 @@ package com.udacity.asteroidradar.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.databinding.AsteroidItemBinding
 
 class AsteroidItemAdapter(

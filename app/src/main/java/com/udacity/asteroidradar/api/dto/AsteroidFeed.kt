@@ -2,7 +2,8 @@ package com.udacity.asteroidradar.api.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.database.entities.AsteroidEntity
+import com.udacity.asteroidradar.domain.Asteroid
 
 /**
  * ```json
@@ -177,7 +178,7 @@ data class AsteroidFeed(
         }
     }
 
-    fun getData(): List<Asteroid> {
+    fun asDomainModels(): List<Asteroid> {
         val asteroids = mutableListOf<Asteroid>()
 
         nearEarthObjects.forEach { (date, nearEarthObjects) ->
@@ -199,6 +200,27 @@ data class AsteroidFeed(
 
         return asteroids
     }
+
+    fun asEntities(): List<AsteroidEntity> {
+        val asteroidEntities = mutableListOf<AsteroidEntity>()
+
+        nearEarthObjects.forEach { (date, nearEarthObjects) ->
+            nearEarthObjects.forEach { nearEarthObject ->
+                asteroidEntities.add(
+                    AsteroidEntity(
+                        id = nearEarthObject.id,
+                        codename = nearEarthObject.name,
+                        closeApproachDate = date,
+                        absoluteMagnitude = nearEarthObject.absoluteMagnitudeH,
+                        estimatedDiameter = nearEarthObject.estimatedDiameter.kilometers.estimatedDiameterMax,
+                        relativeVelocity = nearEarthObject.closeApproachData.first().relativeVelocity.kilometersPerSecond,
+                        distanceFromEarth = nearEarthObject.closeApproachData.first().missDistance.astronomical,
+                        isPotentiallyHazardous = nearEarthObject.isPotentiallyHazardousAsteroid
+                    )
+                )
+            }
+        }
+
+        return asteroidEntities
+    }
 }
-
-
