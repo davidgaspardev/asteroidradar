@@ -29,16 +29,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val pictureOfDay = AsteroidApi.service.getPictureOfDay()
                 Log.d(LOG_TAG, "PICTURE OF DAY: $pictureOfDay")
 
-                val today = Calendar.getInstance()
-                val dateEnd = SimpleDateFormat(API_QUERY_DATE_FORMAT).format(today.time)
-                today.add(Calendar.DAY_OF_YEAR, -DEFAULT_END_DATE_DAYS) // Subtract 7 days
-                val dateStart = SimpleDateFormat(API_QUERY_DATE_FORMAT).format(today.time)
-
-                Log.d(LOG_TAG, "DATE START: $dateStart")
-                Log.d(LOG_TAG, "DATE END: $dateEnd")
-
                 val asteroidRepo = AsteroidRepository
-                val asteroids = asteroidRepo.getFeed(getApplication())
+                val asteroids = asteroidRepo.getCurrentWeek(getApplication())
+
+                Log.d(LOG_TAG, "ASTEROIDS: ${asteroids.size}")
                 _asteroidList.value = asteroids
                 _pictureOfDay.value = pictureOfDay
             } catch (err: Exception) {

@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.repositories
 
 import android.content.Context
+import android.util.Log
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.database.AsteroidDatabase
@@ -13,13 +14,13 @@ import java.util.Calendar
 import java.util.Locale
 
 object AsteroidRepository {
-
+    private val LOG_TAG = "AsteroidRepository"
     private val service = AsteroidApi.service
 
-    private fun getDatesFromRange(): Pair<String, String> {
-        val startDate = Calendar.getInstance()
+    private fun getCurrentWeekDatesFromRange(): Pair<String, String> {
         val endDate = Calendar.getInstance()
-        endDate.add(Calendar.DAY_OF_YEAR, -Constants.DEFAULT_END_DATE_DAYS)
+        val startDate = Calendar.getInstance()
+        startDate.add(Calendar.DAY_OF_YEAR, -Constants.DEFAULT_END_DATE_DAYS)
 
         val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
         val startDateFormatted = dateFormat.format(startDate.time)
@@ -28,14 +29,22 @@ object AsteroidRepository {
         return Pair(startDateFormatted, endDateFormatted)
     }
 
-    suspend fun getFeed(context: Context): List<Asteroid> = withContext(Dispatchers.IO) {
-        val (startDate, endDate) = getDatesFromRange()
+    suspend fun getCurrentWeek(context: Context): List<Asteroid> {
+        val (startDate, endDate) = getCurrentWeekDatesFromRange()
+
+        return getByDateRange(context, startDate, endDate)
+    }
+
+    suspend fun getByDateRange(context: Context, startDate: String, endDate: String): List<Asteroid> = withContext(Dispatchers.IO) {
+        Log.d(LOG_TAG, "DATE START: $startDate")
+        Log.d(LOG_TAG, "DATE END: $endDate")
+
         val asteroidFeed = service.getFeedByRange(startDate, endDate)
         val asteroidEntities = asteroidFeed.asEntities()
 
         val asteroidDao = AsteroidDatabase.getInstance(context).asteroidDao()
         asteroidDao.insertAll(*asteroidEntities.toTypedArray())
 
-        return@withContext asteroidDao.getAll().asDomainModel()
+        return@withContext asteroidDao.getByDateRange(startDate, endDate).asDomainModel()
     }
 }
