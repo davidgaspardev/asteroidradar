@@ -148,8 +148,8 @@ data class AsteroidFeed(
     data class NearEarthObject (
         @Json(name = "id") val id: Long,
         @Json(name = "name") val name: String,
-        @Json(name = "absolute_magnitude_h") val absoluteMagnitudeH: Double,
-        @Json(name = "estimated_diameter") val estimatedDiameter: EstimatedDiameter,
+        @Json(name = "absolute_magnitude_h") val absoluteMagnitudeH: Double?,
+        @Json(name = "estimated_diameter") val estimatedDiameter: EstimatedDiameter?,
         @Json(name = "close_approach_data") val closeApproachData: List<CloseApproachData>,
         @Json(name = "is_potentially_hazardous_asteroid") val isPotentiallyHazardousAsteroid: Boolean
     ) {
@@ -182,14 +182,16 @@ data class AsteroidFeed(
         val asteroids = mutableListOf<Asteroid>()
 
         nearEarthObjects.forEach { (date, nearEarthObjects) ->
-            nearEarthObjects.forEach { nearEarthObject ->
+            nearEarthObjects.filter {
+                it.absoluteMagnitudeH != null
+            }.forEach { nearEarthObject ->
                 asteroids.add(
                     Asteroid(
                         id = nearEarthObject.id,
                         codename = nearEarthObject.name,
                         closeApproachDate = date,
-                        absoluteMagnitude = nearEarthObject.absoluteMagnitudeH,
-                        estimatedDiameter = nearEarthObject.estimatedDiameter.kilometers.estimatedDiameterMax,
+                        absoluteMagnitude = nearEarthObject.absoluteMagnitudeH!!,
+                        estimatedDiameter = nearEarthObject.estimatedDiameter!!.kilometers.estimatedDiameterMax,
                         relativeVelocity = nearEarthObject.closeApproachData.first().relativeVelocity.kilometersPerSecond,
                         distanceFromEarth = nearEarthObject.closeApproachData.first().missDistance.astronomical,
                         isPotentiallyHazardous = nearEarthObject.isPotentiallyHazardousAsteroid
@@ -205,14 +207,16 @@ data class AsteroidFeed(
         val asteroidEntities = mutableListOf<AsteroidEntity>()
 
         nearEarthObjects.forEach { (date, nearEarthObjects) ->
-            nearEarthObjects.forEach { nearEarthObject ->
+            nearEarthObjects.filter {
+                it.absoluteMagnitudeH?.let { true } ?: false
+            }.forEach { nearEarthObject ->
                 asteroidEntities.add(
                     AsteroidEntity(
                         id = nearEarthObject.id,
                         codename = nearEarthObject.name,
                         closeApproachDate = date,
-                        absoluteMagnitude = nearEarthObject.absoluteMagnitudeH,
-                        estimatedDiameter = nearEarthObject.estimatedDiameter.kilometers.estimatedDiameterMax,
+                        absoluteMagnitude = nearEarthObject.absoluteMagnitudeH!!,
+                        estimatedDiameter = nearEarthObject.estimatedDiameter!!.kilometers.estimatedDiameterMax,
                         relativeVelocity = nearEarthObject.closeApproachData.first().relativeVelocity.kilometersPerSecond,
                         distanceFromEarth = nearEarthObject.closeApproachData.first().missDistance.astronomical,
                         isPotentiallyHazardous = nearEarthObject.isPotentiallyHazardousAsteroid

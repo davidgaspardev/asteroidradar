@@ -15,7 +15,6 @@ import java.util.Locale
 
 object AsteroidRepository {
     private val LOG_TAG = "AsteroidRepository"
-    private val service = AsteroidApi.service
 
     private fun getCurrentWeekDatesFromRange(): Pair<String, String> {
         val endDate = Calendar.getInstance()
@@ -36,14 +35,7 @@ object AsteroidRepository {
     }
 
     suspend fun getByDateRange(context: Context, startDate: String, endDate: String): List<Asteroid> = withContext(Dispatchers.IO) {
-        Log.d(LOG_TAG, "DATE START: $startDate")
-        Log.d(LOG_TAG, "DATE END: $endDate")
-
-        val asteroidFeed = service.getFeedByRange(startDate, endDate)
-        val asteroidEntities = asteroidFeed.asEntities()
-
         val asteroidDao = AsteroidDatabase.getInstance(context).asteroidDao()
-        asteroidDao.insertAll(*asteroidEntities.toTypedArray())
 
         return@withContext asteroidDao.getByDateRange(startDate, endDate).asDomainModel()
     }
