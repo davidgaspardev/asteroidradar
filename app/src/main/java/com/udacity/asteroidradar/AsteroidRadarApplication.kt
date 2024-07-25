@@ -1,8 +1,6 @@
 package com.udacity.asteroidradar
 
 import android.app.Application
-import android.os.Build
-import android.util.Log
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -25,27 +23,25 @@ class AsteroidRadarApplication: Application() {
 
     private fun loadWorkers() {
         applicationScope.launch {
-            Log.d(LOG_TAG, "Setting up work constraints")
+            val workManager = WorkManager.getInstance(applicationContext)
+
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.UNMETERED)
                 .setRequiresBatteryNotLow(true)
                 .build()
 
-            Log.d(LOG_TAG, "Creating periodic work request")
             val fetchDataWorkerRequest = PeriodicWorkRequestBuilder<FetchDataWorker>(
-                    7,
-                    TimeUnit.DAYS
-                )
+                7,
+                TimeUnit.DAYS
+            )
                 .setConstraints(constraints)
                 .build()
 
-            Log.d(LOG_TAG, "Enqueuing periodic work request")
-            WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            workManager.enqueueUniquePeriodicWork(
                 FetchDataWorker.WORK_NAME,
-                ExistingPeriodicWorkPolicy.UPDATE,
+                ExistingPeriodicWorkPolicy.KEEP,
                 fetchDataWorkerRequest
             )
-            Log.d(LOG_TAG, "Periodic work request enqueued")
         }
     }
 

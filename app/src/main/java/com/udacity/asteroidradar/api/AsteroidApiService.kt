@@ -10,20 +10,18 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private const val TOKEN = "albfdeCpbixPOOkRicEbYNQNdBP3Wzb1Yl19A6sg"
-
 interface AsteroidApiService {
     @GET("neo/rest/v1/feed")
     suspend fun getFeedByRange(
         @Query("start_date") dateStart: String,
         @Query("end_date") dateEnd: String,
-        @Query("api_key") apiKey: String = TOKEN
+        @Query("api_key") apiKey: String = Constants.TOKEN
     ): AsteroidFeed
 
     @GET("planetary/apod")
     suspend fun getPictureOfDay(
         @Query("thumbs") thumbs: Boolean = true,
-        @Query("api_key") apiKey: String = TOKEN
+        @Query("api_key") apiKey: String = Constants.TOKEN
     ): PictureOfDay
 }
 

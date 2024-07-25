@@ -3,10 +3,13 @@ package com.udacity.asteroidradar.work
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.database.AsteroidDatabase
+import com.udacity.asteroidradar.database.entities.asDomainModel
+import com.udacity.asteroidradar.domain.Asteroid
 import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,7 +35,6 @@ class FetchDataWorker(
 
     override suspend fun doWork(): Result {
         val (startDate, endDate) = getCurrentWeekDatesFromRange()
-        Log.d(LOG_TAG, "Fetching data from NASA API for date range: $startDate - $endDate")
 
         return try {
             Log.d(LOG_TAG, "Fetching data from NASA API")
@@ -42,12 +44,15 @@ class FetchDataWorker(
 
             val asteroidDao = AsteroidDatabase.getInstance(context).asteroidDao()
             asteroidDao.insertAll(*asteroidEntities.toTypedArray())
+
             Result.success()
         } catch (exception: HttpException) {
             Log.w(LOG_TAG, "Error fetching data", exception)
+
             Result.retry()
         } catch (exception: Exception) {
             Log.e(LOG_TAG, "Error fetching data", exception)
+
             Result.failure()
         }
     }

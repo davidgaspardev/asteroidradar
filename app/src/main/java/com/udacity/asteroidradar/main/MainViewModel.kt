@@ -5,35 +5,54 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.udacity.asteroidradar.AsteroidFilter
+import com.udacity.asteroidradar.AsteroidRadarApplication
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.repositories.AsteroidRepository
+import com.udacity.asteroidradar.work.FetchDataWorker
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadAsteroid()
+        setupBackground()
     }
 
     private fun loadAsteroid() {
         viewModelScope.launch {
             try {
                 val pictureOfDay = AsteroidApi.service.getPictureOfDay()
-                Log.d(LOG_TAG, "PICTURE OF DAY: $pictureOfDay")
+                val asteroids = AsteroidRepository.getCurrentWeek(getApplication())
 
-                val asteroidRepo = AsteroidRepository
-                val asteroids = asteroidRepo.getCurrentWeek(getApplication())
-
-                Log.d(LOG_TAG, "ASTEROIDS: ${asteroids.size}")
-                _asteroidList.value = asteroids
                 _pictureOfDay.value = pictureOfDay
+                _asteroidList.value = asteroids
             } catch (err: Exception) {
                 Log.e(LOG_TAG, err.toString())
+            }
+        }
+    }
+
+    private fun setupBackground() {
+        val workManager = WorkManager.getInstance(getApplication())
+        val workInfosLiveData = workManager.getWorkInfosForUniqueWorkLiveData(
+            FetchDataWorker.WORK_NAME
+        )
+
+        workInfosLiveData.observeForever { workInfos ->
+            if (workInfos.isNotEmpty()) {
+                loadAsteroid()
             }
         }
     }
