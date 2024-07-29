@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:src="@{asteroid.potentiallyHazardous ? @drawable/ic_status_potentially_hazardous : @drawable/ic_status_normal}"
-            android:contentDescription="@string/status_icon_of_asteroid"
+            android:contentDescription="@{asteroid.potentiallyHazardous ? @string/status_icon_potentially_hazardous : @string/status_icon_normal}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
