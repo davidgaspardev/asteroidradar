@@ -34,7 +34,7 @@ class AsteroidRadarApplication: Application() {
                 }.build()
 
             val fetchDataWorkerRequest = PeriodicWorkRequestBuilder<FetchDataWorker>(
-                7,
+                1,
                 TimeUnit.DAYS
             )
                 .setConstraints(constraints)
@@ -46,9 +46,5 @@ class AsteroidRadarApplication: Application() {
                 fetchDataWorkerRequest
             )
         }
-    }
-
-    companion object {
-        const val LOG_TAG = "AsteroidRadarApp"
     }
 }
