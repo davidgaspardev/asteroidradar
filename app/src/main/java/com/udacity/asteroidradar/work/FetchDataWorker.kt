@@ -3,13 +3,10 @@ package com.udacity.asteroidradar.work
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
-import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.database.AsteroidDatabase
-import com.udacity.asteroidradar.database.entities.asDomainModel
-import com.udacity.asteroidradar.domain.Asteroid
 import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.Calendar
