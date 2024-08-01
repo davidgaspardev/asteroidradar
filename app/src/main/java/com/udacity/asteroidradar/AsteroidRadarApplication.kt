@@ -1,7 +1,6 @@
 package com.udacity.asteroidradar
 
 import android.app.Application
-import android.os.Build
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -31,9 +30,7 @@ class AsteroidRadarApplication: Application() {
                 .setRequiresBatteryNotLow(true)
                 .setRequiresCharging(true)
                 .apply {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        setRequiresDeviceIdle(true)
-                    }
+                    setRequiresDeviceIdle(true)
                 }.build()
 
             val fetchDataWorkerRequest = PeriodicWorkRequestBuilder<FetchDataWorker>(
