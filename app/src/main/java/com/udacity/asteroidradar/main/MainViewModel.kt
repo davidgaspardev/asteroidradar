@@ -5,15 +5,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.udacity.asteroidradar.AsteroidFilter
-import com.udacity.asteroidradar.AsteroidRadarApplication
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.AsteroidApi
@@ -21,20 +15,25 @@ import com.udacity.asteroidradar.repositories.AsteroidRepository
 import com.udacity.asteroidradar.work.FetchDataWorker
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.util.concurrent.TimeUnit
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val asteroidRepo = AsteroidRepository
 
     init {
         loadAsteroid()
         setupBackground()
     }
 
-    private fun loadAsteroid() {
+    private fun loadAsteroid(forceSync: Boolean = false) {
         viewModelScope.launch {
             try {
+                if (forceSync) {
+                    asteroidRepo.sync(getApplication())
+                }
+
                 val pictureOfDay = AsteroidApi.service.getPictureOfDay()
-                val asteroids = AsteroidRepository.getCurrentWeek(getApplication())
+                val asteroids = asteroidRepo.getCurrentWeek(getApplication())
 
                 _pictureOfDay.value = pictureOfDay
                 _asteroidList.value = asteroids
@@ -51,8 +50,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         )
 
         workInfosLiveData.observeForever { workInfos ->
+            Log.d(LOG_TAG, "WorkInfos: $workInfos")
             if (workInfos.isNotEmpty()) {
-                loadAsteroid()
+                val isWorkFinished = workInfos.first().state.isFinished
+
+                loadAsteroid(!isWorkFinished)
             }
         }
     }
@@ -72,7 +74,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun updateFilter(filter: AsteroidFilter) {
         viewModelScope.launch {
             try {
-                val asteroidRepo = AsteroidRepository
                 val asteroids = when (filter) {
                     AsteroidFilter.SHOW_WEEK -> asteroidRepo.getCurrentWeek(getApplication())
                     AsteroidFilter.SHOW_TODAY -> asteroidRepo.getToday(getApplication())
