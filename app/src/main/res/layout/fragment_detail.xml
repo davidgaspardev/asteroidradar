@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:contentDescription="@{@string/nasa_picture_of_day_content_description_format(asteroid.codename)}"
+            android:contentDescription="@{asteroid.potentiallyHazardous ? @string/status_icon_potentially_hazardous : @string/status_icon_normal}"
             app:asteroidStatusImage="@{asteroid.potentiallyHazardous}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
