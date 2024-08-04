@@ -11,7 +11,7 @@
 
         <variable
             name="clickListener"
-            type="com.udacity.asteroidradar.main.AsteroidItemListener" />
+            type="com.udacity.asteroidradar.ui.main.AsteroidItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
